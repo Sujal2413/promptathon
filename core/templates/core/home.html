@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="hero-card">
+    <div class="hero-left">
+      <h1>Smart waste pickup + segregation, in 30 seconds.</h1>
+      <p class="sub">Request a pickup, get sorting guidance, and track status with clean badges.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="/request/new/">Request Pickup</a>
+        <a class="btn" href="/helper/">Check Segregation</a>
+      </div>
+
+      <div class="chips">
+        <span class="chip wet">Wet</span>
+        <span class="chip dry">Dry</span>
+        <span class="chip ewaste">E-waste</span>
+        <span class="chip hazard">Hazard</span>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-num">{{ stats.total }}</div>
+          <div class="stat-label">Total requests</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{ stats.wet }}</div>
+          <div class="stat-label">Wet</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{ stats.dry }}</div>
+          <div class="stat-label">Dry</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{ stats.ewaste }}</div>
+          <div class="stat-label">E-waste</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">{{ stats.hazard }}</div>
+          <div class="stat-label">Hazard</div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="hint-title">UX points tip ✅</div>
+        <div class="hint-text">
+          Try: create a request → open <b>My Requests</b> → see status badges + timeline.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

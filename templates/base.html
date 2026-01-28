@@ -1,0 +1,58 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WasteWise</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/">WasteWise</a>
+      <nav class="nav-links">
+        <a href="/request/new/">New Pickup</a>
+        <a href="/requests/">My Requests</a>
+        <a href="/helper/">Segregation Helper</a>
+        <a class="pill" href="/collector/">Collector</a>
+        {% if user.is_authenticated %}
+          <a class="ghost" href="/logout/">Logout</a>
+        {% else %}
+          <a class="ghost" href="/login/">Login</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container">
+      {% if messages %}
+        <div class="toasts">
+          {% for message in messages %}
+            <div class="toast {{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>Built for Promptathon • Smooth UI/UX</span>
+      <span class="muted">Django + SQLite</span>
+    </div>
+  </footer>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll('.toast').forEach(t => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(-6px)';
+        setTimeout(() => t.remove(), 350);
+      });
+    }, 2200);
+  </script>
+</body>
+</html>

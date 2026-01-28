@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>Segregation Helper</h2>
+  <p class="muted">Type an item → get bin + do/don’t.</p>
+</div>
+
+<div class="card">
+  <form method="get" class="search">
+    <input class="input" name="q" value="{{ q }}" placeholder="Try: banana peel, battery, milk packet, glass..." />
+    <button class="btn primary" type="submit">Search</button>
+  </form>
+  <div class="helper small muted">Pro tip: Keep it simple. One keyword works best.</div>
+</div>
+
+{% if q %}
+  <div class="grid">
+    {% for item in results %}
+      <div class="card">
+        <div class="row between">
+          <div class="title">{{ item.item_name }}</div>
+          <span class="chip {{ item.category|lower }}">{{ item.get_category_display }}</span>
+        </div>
+        <div class="muted">{{ item.instructions }}</div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

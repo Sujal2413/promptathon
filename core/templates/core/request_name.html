@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>New Pickup Request</h2>
+  <p class="muted">Fill once. Track instantly.</p>
+</div>
+
+<div class="card">
+  <form method="post" enctype="multipart/form-data" class="form-grid">
+    {% csrf_token %}
+
+    <div class="field">
+      <label>Full name</label>
+      {{ form.full_name }}
+      {% if form.full_name.errors %}<div class="error">{{ form.full_name.errors|striptags }}</div>{% endif %}
+    </div>
+
+    <div class="field">
+      <label>Phone (optional)</label>
+      {{ form.phone }}
+      {% if form.phone.errors %}<div class="error">{{ form.phone.errors|striptags }}</div>{% endif %}
+    </div>
+
+    <div class="field">
+      <label>Waste type</label>
+      {{ form.waste_type }}
+      {% if form.waste_type.errors %}<div class="error">{{ form.waste_type.errors|striptags }}</div>{% endif %}
+    </div>
+
+    <div class="field">
+      <label>Quantity</label>
+      {{ form.quantity }}
+      {% if form.quantity.errors %}<div class="error">{{ form.quantity.errors|striptags }}</div>{% endif %}
+    </div>
+
+    <div class="field full">
+      <label>Address / pickup note</label>
+      {{ form.address }}
+      {% if form.address.errors %}<div class="error">{{ form.address.errors|striptags }}</div>{% endif %}
+    </div>
+
+    <div class="field">
+      <label>Preferred slot</label>
+      {{ form.slot }}
+    </div>
+
+    <div class="field">
+      <label>Photo (optional)</label>
+      {{ form.photo }}
+      <div class="helper">Helps collector verify waste type quickly.</div>
+    </div>
+
+    <div class="actions full">
+      <button class="btn primary" type="submit">Create Request</button>
+      <a class="btn" href="/requests/">View My Requests</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

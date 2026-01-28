@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>My Requests</h2>
+  <p class="muted">Live status badges → smooth tracking.</p>
+</div>
+
+{% if not requests %}
+  <div class="card empty">
+    <h3>No requests yet</h3>
+    <p class="muted">Create your first pickup request in 20 seconds.</p>
+    <a class="btn primary" href="/request/new/">Request Pickup</a>
+  </div>
+{% else %}
+  <div class="grid">
+    {% for r in requests %}
+      <div class="card request-card">
+        <div class="row between">
+          <div>
+            <div class="title">{{ r.full_name }}</div>
+            <div class="muted small">{{ r.created_at|date:"d M, h:i A" }} • {{ r.address }}</div>
+          </div>
+          <span class="badge {{ r.status|lower }}">{{ r.get_status_display }}</span>
+        </div>
+
+        <div class="row gap">
+          <span class="chip {{ r.waste_type|lower }}">{{ r.get_waste_type_display }}</span>
+          <span class="chip neutral">{{ r.get_quantity_display }}</span>
+          <span class="chip neutral">{{ r.slot }}</span>
+        </div>
+
+        <div class="timeline">
+          <div class="step {% if r.status == 'REQUESTED' or r.status == 'ASSIGNED' or r.status == 'PICKED' %}on{% endif %}">Requested</div>
+          <div class="dot {% if r.status == 'ASSIGNED' or r.status == 'PICKED' %}on{% endif %}"></div>
+          <div class="step {% if r.status == 'ASSIGNED' or r.status == 'PICKED' %}on{% endif %}">Assigned</div>
+          <div class="dot {% if r.status == 'PICKED' %}on{% endif %}"></div>
+          <div class="step {% if r.status == 'PICKED' %}on{% endif %}">Picked</div>
+        </div>
+
+        {% if r.photo %}
+          <div class="photo">
+            <img src="{{ r.photo.url }}" alt="waste photo"/>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

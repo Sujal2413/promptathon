@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>Collector Login</h2>
+  <p class="muted">For admin/collector dashboard.</p>
+</div>
+
+<div class="card">
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    <div class="field full">
+      <label>Username</label>
+      <input class="input" name="username" placeholder="admin" />
+    </div>
+    <div class="field full">
+      <label>Password</label>
+      <input class="input" name="password" type="password" placeholder="••••••••" />
+    </div>
+    <div class="actions full">
+      <button class="btn primary" type="submit">Login</button>
+      <a class="btn" href="/">Back</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>Collector Dashboard</h2>
+  <p class="muted">Update pickup status in one click.</p>
+</div>
+
+<div class="chips" style="margin-bottom:12px;">
+  <a class="chip neutral" href="/collector/">All</a>
+  <a class="chip requested" href="/collector/?status=REQUESTED">Requested</a>
+  <a class="chip assigned" href="/collector/?status=ASSIGNED">Assigned</a>
+  <a class="chip picked" href="/collector/?status=PICKED">Picked</a>
+</div>
+
+<div class="stats-row">
+  <div class="mini-stat">
+    <div class="stat-num">{{ counts.requested }}</div>
+    <div class="stat-label">Requested</div>
+  </div>
+  <div class="mini-stat">
+    <div class="stat-num">{{ counts.assigned }}</div>
+    <div class="stat-label">Assigned</div>
+  </div>
+  <div class="mini-stat">
+    <div class="stat-num">{{ counts.picked }}</div>
+    <div class="stat-label">Picked</div>
+  </div>
+</div>
+
+{% if not pickups %}
+  <div class="card empty">
+    <h3>No pickups for this filter</h3>
+    <p class="muted">Try switching filter chips above.</p>
+  </div>
+{% else %}
+  <div class="card">
+    <div class="table">
+      <div class="t-head">
+        <div>Name</div>
+        <div>Type</div>
+        <div>Qty</div>
+        <div>Slot</div>
+        <div>Status</div>
+        <div>Action</div>
+      </div>
+
+      {% for p in pickups %}
+      <div class="t-row">
+        <div>
+          <div class="title">{{ p.full_name }}</div>
+          <div class="muted small">{{ p.address }}</div>
+        </div>
+
+        <div>
+          <span class="chip {{ p.waste_type|lower }}">{{ p.get_waste_type_display }}</span>
+        </div>
+
+        <div>
+          <span class="chip neutral">{{ p.get_quantity_display }}</span>
+        </div>
+
+        <div>
+          <span class="chip neutral">{{ p.slot }}</span>
+        </div>
+
+        <div>
+          <span class="badge {{ p.status|lower }}">{{ p.get_status_display }}</span>
+        </div>
+
+        <div>
+          <form method="post" action="/collector/{{ p.id }}/status/" class="inline">
+            {% csrf_token %}
+            <select name="status" class="input small-input">
+              <option value="REQUESTED" {% if p.status == "REQUESTED" %}selected{% endif %}>Requested</option>
+              <option value="ASSIGNED" {% if p.status == "ASSIGNED" %}selected{% endif %}>Assigned</option>
+              <option value="PICKED" {% if p.status == "PICKED" %}selected{% endif %}>Picked</option>
+            </select>
+            <button class="btn small-btn primary" type="submit">Update</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
