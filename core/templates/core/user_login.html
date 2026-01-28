@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>User Login</h2>
+  <p class="muted">Login to track your pickup requests.</p>
+</div>
+
+<div class="card">
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+
+    <div class="field full">
+      <label>Username</label>
+      <input class="input" name="username" placeholder="your username" autocomplete="username" />
+    </div>
+
+    <div class="field full">
+      <label>Password</label>
+      <input class="input" name="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+
+    <div class="actions full">
+      <button class="btn primary" type="submit">Login</button>
+      <a class="btn" href="/user/register/">Create account</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

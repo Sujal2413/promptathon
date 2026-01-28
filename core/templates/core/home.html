@@ -1,16 +1,38 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- HERO -->
 <section class="hero">
   <div class="hero-card">
-    <div class="hero-left">
-      <h1>Smart waste pickup + segregation, in 30 seconds.</h1>
-      <p class="sub">Request a pickup, get sorting guidance, and track status with clean badges.</p>
-      <div class="hero-cta">
-        <a class="btn primary" href="/request/new/">Request Pickup</a>
-        <a class="btn" href="/helper/">Check Segregation</a>
-      </div>
 
-      <div class="chips">
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="kicker">WasteWise • Waste Management</div>
+      <h1>Pickup + segregation, made simple.</h1>
+      <p class="sub">
+        Request pickups, get segregation guidance, and track status. Clean UI, fast demo.
+      </p>
+
+      {% if user.is_authenticated and user.is_staff %}
+        <div class="hero-cta">
+          <a class="btn primary" href="/collector/">Collector Dashboard</a>
+          <a class="btn" href="/collector/logout/">Logout</a>
+        </div>
+      {% elif user.is_authenticated %}
+        <div class="hero-cta">
+          <a class="btn primary" href="/request/new/">Request Pickup</a>
+          <a class="btn" href="/requests/">My Requests</a>
+          <a class="btn" href="/helper/">Segregation Helper</a>
+        </div>
+      {% else %}
+        <div class="hero-cta">
+          <a class="btn primary" href="/user/login/">User Login</a>
+          <a class="btn" href="/user/register/">Register</a>
+          <a class="btn primary" href="/collector/login/">Collector Login</a>
+        </div>
+      {% endif %}
+
+      <div class="chip-row">
         <span class="chip wet">Wet</span>
         <span class="chip dry">Dry</span>
         <span class="chip ewaste">E-waste</span>
@@ -18,37 +40,249 @@
       </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="hero-right">
-      <div class="stat-grid">
-        <div class="stat">
-          <div class="stat-num">{{ stats.total }}</div>
-          <div class="stat-label">Total requests</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">{{ stats.wet }}</div>
-          <div class="stat-label">Wet</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">{{ stats.dry }}</div>
-          <div class="stat-label">Dry</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">{{ stats.ewaste }}</div>
-          <div class="stat-label">E-waste</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">{{ stats.hazard }}</div>
-          <div class="stat-label">Hazard</div>
-        </div>
-      </div>
+      {% if stats %}
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Live Requests</div>
+            <div class="panel-sub">Visible to collectors only</div>
+          </div>
 
-      <div class="hint-card">
-        <div class="hint-title">UX points tip ✅</div>
-        <div class="hint-text">
-          Try: create a request → open <b>My Requests</b> → see status badges + timeline.
+          <div class="stat-grid">
+            <div class="stat">
+              <div class="stat-num">{{ stats.total }}</div>
+              <div class="stat-label">Total</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">{{ stats.wet }}</div>
+              <div class="stat-label">Wet</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">{{ stats.dry }}</div>
+              <div class="stat-label">Dry</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">{{ stats.ewaste }}</div>
+              <div class="stat-label">E-waste</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">{{ stats.hazard }}</div>
+              <div class="stat-label">Hazard</div>
+            </div>
+          </div>
+
+          <div class="actions" style="margin-top:14px;">
+            <a class="btn primary" href="/collector/">Open Dashboard</a>
+          </div>
         </div>
+      {% else %}
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Two roles, one workflow</div>
+            <div class="panel-sub">Designed for a smooth demo</div>
+          </div>
+
+          <div class="role-grid">
+            <div class="role-card">
+              <div class="role-title">User</div>
+              <div class="role-desc">Create pickup → track updates</div>
+              <div class="role-actions">
+                <a class="btn primary" href="/user/login/">User Login</a>
+              </div>
+            </div>
+
+            <div class="role-card">
+              <div class="role-title">Collector</div>
+              <div class="role-desc">Update status → manage queue</div>
+              <div class="role-actions">
+                <a class="btn primary" href="/collector/login/">Collector Login</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="mini-steps">
+            <div class="step">1) Create request</div>
+            <div class="step">2) Collector updates</div>
+            <div class="step">3) Timeline updates</div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-head">
+    <h2>How it works</h2>
+    <p class="muted">Simple, clean, fast to understand.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="title">1) Create Pickup</div>
+      <p class="muted" style="margin-top:8px;">
+        Select waste type, quantity, slot. Optional photo helps verification.
+      </p>
+      <div class="chip-row" style="margin-top:10px;">
+        <span class="chip wet">Wet</span>
+        <span class="chip dry">Dry</span>
+        <span class="chip ewaste">E-waste</span>
+        <span class="chip hazard">Hazard</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">2) Track Status</div>
+      <p class="muted" style="margin-top:8px;">
+        “My Requests” shows status badge + timeline.
+      </p>
+      <div class="timeline">
+        <span class="step on">Requested</span><span class="dot on"></span>
+        <span class="step">Assigned</span><span class="dot"></span>
+        <span class="step">Picked</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="title">3) Collector Dashboard</div>
+      <p class="muted" style="margin-top:8px;">
+        Filter by status and update with one click.
+      </p>
+      <div class="chip-row" style="margin-top:10px;">
+        <span class="chip requested">Requested</span>
+        <span class="chip assigned">Assigned</span>
+        <span class="chip picked">Picked</span>
       </div>
     </div>
   </div>
 </section>
+
+<!-- EXTRA PADDING HERE ✅ -->
+<div style="height: 26px;"></div>
+
+<!-- QUICK EXAMPLES -->
+<section class="section">
+  <div class="section-head">
+    <h2>Quick segregation examples</h2>
+    <p class="muted">Instant “smartness” for judges.</p>
+  </div>
+
+  <div class="grid-4">
+    <div class="card">
+      <div class="row between">
+        <div class="title">Banana peel</div>
+        <span class="chip wet">Wet</span>
+      </div>
+      <p class="muted" style="margin-top:8px;">Compost / green bin if available.</p>
+    </div>
+
+    <div class="card">
+      <div class="row between">
+        <div class="title">Plastic bottle</div>
+        <span class="chip dry">Dry</span>
+      </div>
+      <p class="muted" style="margin-top:8px;">Rinse → dry bin / recycling.</p>
+    </div>
+
+    <div class="card">
+      <div class="row between">
+        <div class="title">Old charger</div>
+        <span class="chip ewaste">E-waste</span>
+      </div>
+      <p class="muted" style="margin-top:8px;">Drop at e-waste point.</p>
+    </div>
+
+    <div class="card">
+      <div class="row between">
+        <div class="title">Battery</div>
+        <span class="chip hazard">Hazard</span>
+      </div>
+      <p class="muted" style="margin-top:8px;">Keep separate; safe disposal.</p>
+    </div>
+  </div>
+
+  <!-- REMOVED: Open Segregation Helper button ✅ -->
+
+</section>
+
+<!-- PAGE STYLES (scoped to home only) -->
+<style>
+  .kicker { font-weight: 700; letter-spacing: .2px; opacity: .8; margin-bottom: 10px; }
+  .section { margin-top: 22px; }
+  .section-head { margin-bottom: 10px; }
+  .section-head h2 { margin: 0; }
+  .section-head p { margin: 6px 0 0; }
+
+  .panel {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid rgba(17,24,39,.08);
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(17,24,39,.06);
+  }
+  .panel-head { margin-bottom: 12px; }
+  .panel-title { font-weight: 800; font-size: 18px; }
+  .panel-sub { margin-top: 4px; opacity: .7; font-size: 14px; }
+
+  .divider {
+    height: 1px;
+    background: rgba(17,24,39,.10);
+    margin: 14px 0;
+  }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .role-card {
+    border: 1px solid rgba(17,24,39,.08);
+    border-radius: 14px;
+    padding: 14px;
+    background: rgba(250,245,236,.45);
+  }
+  .role-title { font-weight: 800; }
+  .role-desc { margin-top: 6px; opacity: .75; font-size: 14px; }
+  .role-actions { margin-top: 10px; }
+
+  .mini-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    font-weight: 700;
+    opacity: .8;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: 1100px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr; }
+    .role-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
 {% endblock %}

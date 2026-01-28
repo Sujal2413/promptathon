@@ -11,15 +11,22 @@
   <header class="nav">
     <div class="nav-inner">
       <a class="brand" href="/">WasteWise</a>
-      <nav class="nav-links">
-        <a href="/request/new/">New Pickup</a>
-        <a href="/requests/">My Requests</a>
-        <a href="/helper/">Segregation Helper</a>
-        <a class="pill" href="/collector/">Collector</a>
-        {% if user.is_authenticated %}
-          <a class="ghost" href="/logout/">Logout</a>
+
+      <nav class="nav-links nav-auth">
+        {% if user.is_authenticated and user.is_staff %}
+          <a class="btn primary nav-btn" href="/collector/">Collector Dashboard</a>
+          <a class="btn nav-btn" href="/collector/logout/">Logout</a>
+
+        {% elif user.is_authenticated %}
+          <a href="/request/new/">New Pickup</a>
+          <a href="/requests/">My Requests</a>
+          <a href="/helper/">Segregation Helper</a>
+          <a class="btn nav-btn" href="/user/logout/">Logout</a>
+
         {% else %}
-          <a class="ghost" href="/login/">Login</a>
+          <a class="btn nav-btn" href="/user/login/">User Login</a>
+          <a class="btn nav-btn" href="/user/register/">Register</a>
+          <a class="btn nav-btn" href="/collector/login/">Collector Login</a>
         {% endif %}
       </nav>
     </div>
@@ -54,5 +61,10 @@
       });
     }, 2200);
   </script>
+
+  <style>
+    .nav-auth { display:flex; align-items:center; gap:10px; }
+    .nav-btn { padding: 10px 14px; border-radius: 999px; }
+  </style>
 </body>
 </html>

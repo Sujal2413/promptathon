@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>Collector Login</h2>
+  <p class="muted">Secure access to pickup dashboard.</p>
+</div>
+
+<div class="card">
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+
+    <div class="field full">
+      <label>Username</label>
+      <input class="input" name="username" placeholder="collector/admin username" autocomplete="username" />
+    </div>
+
+    <div class="field full">
+      <label>Password</label>
+      <input class="input" name="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+
+    <div class="actions full">
+      <button class="btn primary" type="submit">Login</button>
+      <a class="btn" href="/">Back</a>
+    </div>
+  </form>
+
+  <div class="hint-card" style="margin-top:14px;">
+    <div class="hint-title">Demo tip ✅</div>
+    <div class="hint-text">Login → filter “Requested” → set Assigned/Picked → show My Requests timeline update.</div>
+  </div>
+</div>
+{% endblock %}
