@@ -76,3 +76,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "/collector/login/"
 LOGIN_REDIRECT_URL = "/collector/"
 LOGOUT_REDIRECT_URL = "/"
+
+# Gemini API Configuration
+import os
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "your-api-key-here")

@@ -2,11 +2,19 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_http_methods
+import json
 
 from .forms import PickupRequestForm
 from .models import PickupRequest, WasteGuideItem
+
+try:
+    import google.generativeai as genai
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
 
 
 def home(request):
@@ -210,3 +218,57 @@ def update_status(request, pk):
     pr.save()
     messages.success(request, f"Status updated to {pr.get_status_display()}.")
     return redirect("collector")
+
+
+# Chatbot Views
+def chatbot(request):
+    """Render chatbot page - accessible without login"""
+    return render(request, "core/chatbot.html")
+
+
+@require_http_methods(["POST"])
+def chatbot_message(request):
+    """Handle chatbot messages via API"""
+    if not GEMINI_AVAILABLE:
+        return JsonResponse({"error": "Gemini API not available"}, status=500)
+    
+    try:
+        data = json.loads(request.body)
+        user_message = data.get("message", "").strip()
+        
+        if not user_message:
+            return JsonResponse({"error": "Message cannot be empty"}, status=400)
+        
+        # Get API key from settings
+        from django.conf import settings
+        api_key = settings.GEMINI_API_KEY
+        
+        if api_key == "your-api-key-here" or not api_key:
+            return JsonResponse({"error": "API key not configured"}, status=500)
+        
+        # Configure Gemini
+        genai.configure(api_key=api_key)
+        
+        # Create a prompt for waste management guidance
+        system_prompt = """You are a helpful waste management assistant for WasteWise, a waste pickup and segregation application. 
+You help users with:
+1. Waste segregation guidance (Wet, Dry, E-waste, Hazard)
+2. How to properly dispose of items
+3. Information about waste management
+4. How to use the WasteWise app
+
+Always be concise and helpful. If someone asks about non-waste related topics, politely redirect them to waste management topics."""
+        
+        # Use Gemini Flash 2.5
+        model = genai.GenerativeModel("gemini-2.5-flash", 
+                                     system_instruction=system_prompt)
+        
+        response = model.generate_content(user_message)
+        bot_reply = response.text
+        
+        return JsonResponse({"reply": bot_reply})
+    
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": f"Error: {str(e)}"}, status=500)

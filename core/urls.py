@@ -19,4 +19,8 @@ urlpatterns = [
     # Collector dashboard
     path("collector/", views.collector_dashboard, name="collector"),
     path("collector/<int:pk>/status/", views.update_status, name="update_status"),
+
+    # Chatbot
+    path("chatbot/", views.chatbot, name="chatbot"),
+    path("api/chatbot/message/", views.chatbot_message, name="chatbot_message"),
 ]
