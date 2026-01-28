@@ -17,6 +17,7 @@
 
   <div class="chat-input-area">
     <form id="chatForm" onsubmit="sendMessage(event)">
+      {% csrf_token %}
       <div class="input-group">
         <input 
           type="text" 
@@ -233,12 +234,15 @@
     // Show loading indicator
     showLoadingIndicator();
     
+    // Get CSRF token from form
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
     // Send to backend
     fetch('{% url "chatbot_message" %}', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': getCookie('csrftoken')
+        'X-CSRFToken': csrfToken
       },
       body: JSON.stringify({ message: message })
     })
@@ -299,21 +303,6 @@
   function removeLoadingIndicator() {
     const loading = document.getElementById('loadingIndicator');
     if (loading) loading.remove();
-  }
-  
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
   }
   
   function escapeHtml(text) {
